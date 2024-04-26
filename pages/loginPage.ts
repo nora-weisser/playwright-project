@@ -4,7 +4,7 @@ require('dotenv').config();
 
 
 export class LoginPage {
-    
+
     readonly page: Page;
     readonly createAccount: Locator;
     readonly firstName: Locator;
@@ -14,8 +14,8 @@ export class LoginPage {
     readonly confirmPassword: Locator;
     readonly createAccountBtn: Locator;
     readonly consent: Locator;
-   
-   
+
+
 
     constructor(page: Page) {
         this.page = page;
@@ -27,7 +27,7 @@ export class LoginPage {
         this.confirmPassword = page.getByLabel('Confirm Password');
         this.createAccountBtn = page.getByRole('button', { name: 'Create an Account' });
         this.consent = page.getByLabel('Consent', { exact: true });
-   
+
     }
 
     async navigate() {
@@ -42,11 +42,11 @@ export class LoginPage {
     //     await expect(this.nameOfUser).toHaveText("Welcome " + process.env.USERNAME);
     // }
 
-    async signUp(){
+    async signUp() {
+
+        await this.handleConsent();
 
         const email = await this.generateUniqueEmail();
-       
-        await this.consent.click();
         await this.createAccount.click();
         await this.firstName.fill(process.env.USERNAME as string);
         await this.lastName.fill(process.env.USERNAME as string)
@@ -64,7 +64,18 @@ export class LoginPage {
         return uniqueEmail;
     }
 
- 
+    async handleConsent() {
+        const consent = this.consent;
+        if (await consent.isVisible()) {
+            await consent.click();
+            console.log('Consent clicked.');
+        } else {
+            console.log('Consent element is not visible.');
+        }
+    }
 
-   
+
+
+
+
 }
