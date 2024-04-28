@@ -1,4 +1,6 @@
 import { expect, Locator, Page } from '@playwright/test';
+import configuration from '../playwright.config';
+
 
 require('dotenv').config();
 
@@ -14,6 +16,10 @@ export class LoginPage {
     readonly confirmPassword: Locator;
     readonly createAccountBtn: Locator;
     readonly consent: Locator;
+    readonly signIn: Locator;
+    readonly emailText: Locator;
+    readonly passwordText: Locator;
+    readonly signInButton: Locator;
 
 
 
@@ -27,20 +33,27 @@ export class LoginPage {
         this.confirmPassword = page.getByLabel('Confirm Password');
         this.createAccountBtn = page.getByRole('button', { name: 'Create an Account' });
         this.consent = page.getByLabel('Consent', { exact: true });
+        this.signIn = page.getByRole('link', { name: 'Sign In' });
+        this.emailText = page.getByLabel('Email', { exact: true });
+        this.passwordText = page.getByLabel('Password');
+        this.signInButton = page.getByRole('button', { name: 'Sign In' });
 
     }
 
     async navigate() {
-        await this.page.goto(process.env.URL as string);
+
+        const baseURL =  configuration?.use?.baseURL;
+        await this.page.goto(baseURL as string);
     }
 
-    // async loginToApplication(username: string, password: string) {
-    //     await this.loginText.click();
-    //     await this.usernameTextbox.fill(process.env.USERNAME as string);
-    //     await this.passwordTextbox.fill(process.env.PASSWORD as string);
-    //     await this.loginButton.click();
-    //     await expect(this.nameOfUser).toHaveText("Welcome " + process.env.USERNAME);
-    // }
+    async loginToApplication(username: string, password: string) {
+
+        await this.signIn.click();
+        await this.emailText.fill(username);
+        await this.passwordText.fill(password);
+        await this.signInButton.click();
+    }
+
 
     async signUp() {
 
